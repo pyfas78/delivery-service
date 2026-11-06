@@ -10,11 +10,13 @@ public class DeliveryOrderService {
         this.paymentProcessor = paymentProcessor;
     }
 
-    public void checkOut(String dishName, double price) {
-        if(paymentProcessor.processPayment(price)) {
+    public boolean checkOut(String dishName, double price) {
+        boolean paid = paymentProcessor.processPayment(price);
+        if(paid) {
             System.out.println("Блюдо " + dishName + " успешно заказано");
         } else {
             System.out.println("Ошибка оплаты!");
         }
+        return paid;
     }
 }

@@ -9,13 +9,7 @@ import org.springframework.context.ApplicationContext;
 public class Demo1Application {
 
     public static void main(String[] args) {
-       ApplicationContext context =
-               SpringApplication.run(Demo1Application.class, args);
-
-        DeliveryOrderService orderService =
-                context.getBean(DeliveryOrderService.class);
-
-        orderService.checkOut("Banana", 1200);
+       SpringApplication.run(Demo1Application.class, args);
     }
 
 }
