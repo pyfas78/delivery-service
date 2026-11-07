@@ -2,11 +2,14 @@ package dev.danilovich.demo1.OrderController;
 
 import dev.danilovich.demo1.dto.OrderRequest;
 import dev.danilovich.demo1.dto.OrderResponse;
+import dev.danilovich.demo1.model.Model;
 import dev.danilovich.demo1.service.DeliveryOrderService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -20,6 +23,16 @@ public class OrderController {
     @GetMapping("/info")
     public String info() {
         return "Delivery Service v1.0";
+    }
+
+    @GetMapping("/api/orders")
+    public List<Model> getOrders() {
+        return deliveryOrderService.getAllOrders();
+    }
+
+    @GetMapping("api/orders/{id}")
+    public ResponseEntity<Model> getOrder(@PathVariable Long id) {
+        return ResponseEntity.ok().body(deliveryOrderService.getOrderById(id));
     }
 
     @PostMapping
