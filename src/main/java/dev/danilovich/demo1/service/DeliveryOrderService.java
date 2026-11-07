@@ -1,7 +1,7 @@
 package dev.danilovich.demo1.service;
 
 import dev.danilovich.demo1.exception.OrderNotFoundException;
-import dev.danilovich.demo1.model.Model;
+import dev.danilovich.demo1.model.Order;
 import dev.danilovich.demo1.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -27,17 +27,12 @@ public class DeliveryOrderService {
         return paid;
     }
 
-    public Model createOrder(String dishName, double price) {
-        boolean isPaid = paymentProcessor.processPayment(price);
-        return orderRepository.save(dishName,price,isPaid);
-    }
-
-    public Model getOrderById(Long id) {
+    public Order getOrderById(Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));
     }
 
-    public List<Model> getAllOrders() {
+    public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
 }
