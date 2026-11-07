@@ -11,7 +11,7 @@ public class CardPaymentProcessor implements PaymentProcessor {
 
     @Override
     public boolean processPayment(double amount) {
-        System.out.println("оплата с карты на сумму: " + amount);
+        System.out.println("Оплата с карты на сумму: " + amount);
         return true;
     }
 
