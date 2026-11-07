@@ -37,7 +37,7 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<Order> createOrder(@Valid @RequestBody OrderRequest orderRequest) {
         Order order = deliveryOrderService.createOrder(orderRequest.dishName(), orderRequest.price());
-        if(order.paid()) {
+        if(order.isPaid()) {
             return ResponseEntity.status(HttpStatus.CREATED).body(order);
         } else {
             return ResponseEntity.badRequest().body(order);
