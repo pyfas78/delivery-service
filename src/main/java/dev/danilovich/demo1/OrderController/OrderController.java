@@ -3,6 +3,9 @@ package dev.danilovich.demo1.OrderController;
 import dev.danilovich.demo1.dto.OrderRequest;
 import dev.danilovich.demo1.dto.OrderResponse;
 import dev.danilovich.demo1.service.DeliveryOrderService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,12 +23,16 @@ public class OrderController {
     }
 
     @PostMapping
-    public OrderResponse createOrder(@RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody OrderRequest orderRequest) {
         boolean isPaid = deliveryOrderService.checkOut(orderRequest.dishName(), orderRequest.price());
-        if (isPaid) {
-            return new OrderResponse(true, "Order Created Successfully: " + orderRequest.dishName());
+        if(isPaid) {
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(new OrderResponse(true, "Order has been created: " + orderRequest.dishName()));
         } else {
-            return new OrderResponse(false, "Order Not Created Successfully");
+            return ResponseEntity
+                    .badRequest()
+                    .body(new OrderResponse(false, "Order hasn't been created - payment failed"));
         }
     }
 }
