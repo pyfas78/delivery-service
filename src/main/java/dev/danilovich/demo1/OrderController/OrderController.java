@@ -19,7 +19,7 @@ public class OrderController {
         return "Delivery Service v1.0";
     }
 
-    @PostMapping("/api/orders")
+    @PostMapping
     public OrderResponse createOrder(@RequestBody OrderRequest orderRequest) {
         deliveryOrderService.checkOut(orderRequest.dishName(), orderRequest.price());
         if (true) {
