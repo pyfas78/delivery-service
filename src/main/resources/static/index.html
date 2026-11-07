@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Delivery Service | Spring Boot 3</title>
+    <title>Food Delivery Service | Spring Boot 3 & PostgreSQL</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -17,14 +17,10 @@
             --text-muted: #94a3b8;
             --success: #10b981;
             --danger: #ef4444;
+            --danger-hover: #dc2626;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
 
         body {
             background-color: var(--bg);
@@ -36,10 +32,7 @@
             padding: 40px 20px;
         }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1050px; margin: 0 auto; }
 
         header {
             display: flex;
@@ -50,242 +43,90 @@
             border-bottom: 1px solid var(--card-border);
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-icon {
-            font-size: 32px;
-            background: rgba(255, 87, 34, 0.15);
-            padding: 8px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 87, 34, 0.3);
-        }
-
-        .logo-text h1 {
-            font-size: 22px;
-            font-weight: 700;
-        }
-
-        .logo-text span {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
+        .logo { display: flex; align-items: center; gap: 12px; }
+        .logo-icon { font-size: 32px; background: rgba(255, 87, 34, 0.15); padding: 8px; border-radius: 12px; border: 1px solid rgba(255, 87, 34, 0.3); }
+        .logo-text h1 { font-size: 22px; font-weight: 700; }
+        .logo-text span { font-size: 13px; color: var(--text-muted); }
 
         .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(16, 185, 129, 0.1); color: var(--success);
+            padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;
             border: 1px solid rgba(16, 185, 129, 0.2);
         }
+        .status-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 10px var(--success); }
 
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--success);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--success);
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1.6fr;
-            gap: 25px;
-        }
-
-        @media (max-width: 768px) {
-            .grid { grid-template-columns: 1fr; }
-        }
+        .grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 25px; }
+        @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } }
 
         .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            background: var(--card-bg); backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border); border-radius: 16px;
+            padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        .card-title {
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .card-title { font-size: 17px; font-weight: 600; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
 
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        label {
-            display: block;
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-
+        .form-group { margin-bottom: 16px; }
+        label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
         input {
-            width: 100%;
-            background: rgba(11, 15, 25, 0.6);
-            border: 1px solid var(--card-border);
-            border-radius: 10px;
-            padding: 12px 14px;
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-            transition: all 0.2s;
+            width: 100%; background: rgba(11, 15, 25, 0.6);
+            border: 1px solid var(--card-border); border-radius: 10px;
+            padding: 12px 14px; color: #fff; font-size: 14px; outline: none; transition: all 0.2s;
         }
-
-        input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.2);
-        }
+        input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.2); }
 
         .btn {
-            width: 100%;
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            padding: 13px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
+            width: 100%; background: var(--accent); color: #fff; border: none;
+            border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px;
         }
-
-        .btn:hover {
-            background: var(--accent-hover);
-            transform: translateY(-1px);
-        }
+        .btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--card-border);
-            color: var(--text-muted);
-            padding: 8px 14px;
-            width: auto;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border);
+            color: var(--text-muted); padding: 9px 15px; width: auto; border-radius: 10px; cursor: pointer;
+            font-size: 13px; font-weight: 500; transition: all 0.2s;
         }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
 
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger); padding: 6px 10px; border-radius: 8px; font-size: 12px;
+            cursor: pointer; transition: all 0.2s; font-weight: 600;
         }
+        .btn-delete:hover { background: var(--danger); color: #fff; }
 
-        .search-box {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+        .search-section { margin-bottom: 18px; display: flex; flex-direction: column; gap: 12px; }
+        .search-box { display: flex; gap: 8px; }
 
-        .orders-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .orders-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-height: 480px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
+        .orders-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .orders-list { display: flex; flex-direction: column; gap: 12px; max-height: 520px; overflow-y: auto; padding-right: 5px; }
 
         .order-item {
-            background: rgba(11, 15, 25, 0.5);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 14px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.2s;
+            background: rgba(11, 15, 25, 0.5); border: 1px solid var(--card-border);
+            border-radius: 12px; padding: 14px 16px; display: flex; justify-content: space-between;
+            align-items: center; transition: all 0.2s;
         }
+        .order-item:hover { border-color: rgba(255, 255, 255, 0.2); transform: translateX(2px); }
 
-        .order-item:hover {
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateX(2px);
-        }
+        .order-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+        .order-info span { font-size: 12px; color: var(--text-muted); }
 
-        .order-info h4 {
-            font-size: 15px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
+        .order-right { display: flex; align-items: center; gap: 16px; }
+        .order-meta { text-align: right; }
+        .order-price { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px; }
 
-        .order-info span {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .order-meta {
-            text-align: right;
-        }
-
-        .order-price {
-            font-size: 16px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 4px;
-        }
-
-        .badge-paid {
-            font-size: 11px;
-            font-weight: 600;
-            padding: 3px 8px;
-            border-radius: 6px;
-            display: inline-block;
-        }
-
-        .badge-paid.true {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--success);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-
-        .badge-paid.false {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
+        .badge-paid { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; display: inline-block; }
+        .badge-paid.true { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-paid.false { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
 
         .toast {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            padding: 14px 20px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 500;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            display: none;
-            z-index: 1000;
-            animation: slideIn 0.3s forwards;
+            position: fixed; bottom: 25px; right: 25px; padding: 14px 20px; border-radius: 12px;
+            font-size: 14px; font-weight: 500; box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            display: none; z-index: 1000; animation: slideIn 0.3s forwards;
         }
-
-        @keyframes slideIn {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
+        @keyframes slideIn { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .toast-success { background: #065f46; color: #a7f3d0; border: 1px solid #10b981; }
         .toast-error { background: #7f1d1d; color: #fecaca; border: 1px solid #ef4444; }
     </style>
@@ -298,7 +139,7 @@
             <div class="logo-icon">🍕</div>
             <div class="logo-text">
                 <h1>Delivery Dashboard</h1>
-                <span>Spring Boot 3 + PostgreSQL Live Demo</span>
+                <span>Spring Boot 3 + PostgreSQL + Docker Live Demo</span>
             </div>
         </div>
         <div class="status-badge">
@@ -308,7 +149,7 @@
     </header>
 
     <div class="grid">
-        <!-- Левая колонка: Форма создания заказа -->
+        <!-- Левая колонка: Форма создания и Поиск -->
         <div class="card">
             <div class="card-title">📝 Оформить новый заказ</div>
             <form id="orderForm">
@@ -321,26 +162,37 @@
                     <input type="number" id="price" placeholder="450" required min="1" step="0.5">
                 </div>
                 <button type="submit" class="btn" id="submitBtn">
-                    <span>Сделать заказ</span>
+                    <span>Оформить заказ</span>
                 </button>
             </form>
 
-            <hr style="border: 0; border-top: 1px solid var(--card-border); margin: 25px 0;">
+            <hr style="border: 0; border-top: 1px solid var(--card-border); margin: 24px 0;">
 
-            <!-- Поиск заказа по ID -->
-            <div class="card-title" style="margin-bottom: 12px;">🔍 Поиск заказа по ID</div>
-            <div class="search-box">
-                <input type="number" id="searchId" placeholder="ID заказа (напр. 1)">
-                <button class="btn btn-secondary" id="searchBtn" style="width: auto;">Найти</button>
+            <!-- Секция поисков -->
+            <div class="search-section">
+                <!-- Поиск по названию блюда (твой новый эндпоинт /search/{dishName}) -->
+                <label>🔍 Поиск по названию блюда</label>
+                <div class="search-box">
+                    <input type="text" id="searchDishInput" placeholder="Например: пицца">
+                    <button class="btn-secondary" id="searchDishBtn">Искать</button>
+                </div>
+
+                <!-- Поиск по ID -->
+                <label style="margin-top: 6px;">🎯 Поиск по точному ID заказа</label>
+                <div class="search-box">
+                    <input type="number" id="searchIdInput" placeholder="ID (напр. 1)">
+                    <button class="btn-secondary" id="searchIdBtn">Найти</button>
+                </div>
             </div>
-            <div id="searchResult" style="font-size: 13px; color: var(--text-muted);"></div>
+
+            <div id="searchResult"></div>
         </div>
 
-        <!-- Правая колонка: Список заказов из PostgreSQL -->
+        <!-- Правая колонка: Список заказов -->
         <div class="card">
             <div class="orders-header">
                 <div class="card-title" style="margin: 0;">📦 Заказы в базе данных</div>
-                <button class="btn btn-secondary" onclick="loadOrders()">🔄 Обновить</button>
+                <button class="btn-secondary" onclick="loadOrders()">🔄 Показать все</button>
             </div>
             <div class="orders-list" id="ordersList">
                 <div style="text-align: center; color: var(--text-muted); padding: 40px 0;">Загрузка заказов...</div>
@@ -362,38 +214,47 @@
         setTimeout(() => { toast.style.display = 'none'; }, 3500);
     }
 
-    // 1. Загрузка всех заказов (GET /api/orders)
-    async function loadOrders() {
+    // Рендер списка заказов
+    function renderOrders(orders, emptyMessage = 'Заказы не найдены.') {
         const list = document.getElementById('ordersList');
-        try {
-            const response = await fetch(API_URL);
-            const orders = await response.json();
+        if (!orders || orders.length === 0) {
+            list.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 40px 0;">${emptyMessage}</div>`;
+            return;
+        }
 
-            if (orders.length === 0) {
-                list.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 40px 0;">В базе пока нет заказов. Создайте первый заказ слева!</div>`;
-                return;
-            }
-
-            list.innerHTML = orders.map(order => `
-        <div class="order-item">
-          <div class="order-info">
-            <h4>${escapeHtml(order.dishName)}</h4>
-            <span>Заказ #${order.id}</span>
-          </div>
+        list.innerHTML = orders.map(order => `
+      <div class="order-item" id="order-card-${order.id}">
+        <div class="order-info">
+          <h4>${escapeHtml(order.dishName)}</h4>
+          <span>Заказ #${order.id}</span>
+        </div>
+        <div class="order-right">
           <div class="order-meta">
             <div class="order-price">${order.price.toFixed(2)} ₽</div>
             <span class="badge-paid ${order.paid}">
               ${order.paid ? '✓ Оплачен' : '✗ Ошибка оплаты'}
             </span>
           </div>
+          <!-- Кнопка DELETE: вызывает твой @DeleteMapping("/{id}") -->
+          <button class="btn-delete" onclick="deleteOrder(${order.id})" title="Удалить заказ">✕</button>
         </div>
-      `).reverse().join('');
+      </div>
+    `).reverse().join('');
+    }
+
+    // 1. Получить все заказы (GET /api/orders)
+    async function loadOrders() {
+        document.getElementById('searchResult').innerHTML = '';
+        try {
+            const response = await fetch(API_URL);
+            const orders = await response.json();
+            renderOrders(orders, 'В базе пока нет заказов. Создайте первый заказ слева!');
         } catch (err) {
-            list.innerHTML = `<div style="color: var(--danger); text-align: center; padding: 20px;">Ошибка загрузки данных из сервера.</div>`;
+            document.getElementById('ordersList').innerHTML = `<div style="color: var(--danger); text-align: center; padding: 20px;">Ошибка загрузки данных.</div>`;
         }
     }
 
-    // 2. Отправка нового заказа (POST /api/orders)
+    // 2. Создать заказ (POST /api/orders)
     document.getElementById('orderForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const btn = document.getElementById('submitBtn');
@@ -418,45 +279,79 @@
             const result = await response.json();
 
             if (response.ok) {
-                showToast(`Заказ #${result.id} "${result.dishName}" успешно сохранен в PostgreSQL!`);
+                showToast(`Заказ #${result.id} "${result.dishName}" успешно сохранен!`);
                 dishInput.value = '';
                 priceInput.value = '';
                 loadOrders();
             } else {
-                showToast(result.message || 'Ошибка валидации или оплаты', true);
+                showToast('Ошибка валидации или оплаты', true);
             }
         } catch (err) {
-            showToast('Ошибка сети при отправке заказа', true);
+            showToast('Ошибка сети при отправке', true);
         } finally {
             btn.disabled = false;
-            btn.textContent = 'Сделать заказ';
+            btn.textContent = 'Оформить заказ';
         }
     });
 
-    // 3. Поиск по ID (GET /api/orders/{id})
-    document.getElementById('searchBtn').addEventListener('click', async () => {
-        const id = document.getElementById('searchId').value.trim();
+    // 3. Удалить заказ (DELETE /api/orders/{id})
+    async function deleteOrder(id) {
+        if (!confirm(`Удалить заказ #${id}?`)) return;
+
+        try {
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                showToast(`Заказ #${id} успешно удален!`);
+                loadOrders();
+            } else {
+                showToast(`Не удалось удалить заказ #${id}`, true);
+            }
+        } catch (err) {
+            showToast('Ошибка сети при удалении', true);
+        }
+    }
+
+    // 4. Поиск по названию блюда (GET /api/orders/search/{dishName})
+    document.getElementById('searchDishBtn').addEventListener('click', async () => {
+        const query = document.getElementById('searchDishInput').value.trim();
+        if (!query) { loadOrders(); return; }
+
+        try {
+            const response = await fetch(`${API_URL}/search/${encodeURIComponent(query)}`);
+            const results = await response.json();
+            renderOrders(results, `По запросу "${escapeHtml(query)}" ничего не найдено.`);
+        } catch (err) {
+            showToast('Ошибка при поиске блюда', true);
+        }
+    });
+
+    // 5. Поиск по точному ID (GET /api/orders/{id})
+    document.getElementById('searchIdBtn').addEventListener('click', async () => {
+        const id = document.getElementById('searchIdInput').value.trim();
         const resBox = document.getElementById('searchResult');
         if (!id) return;
 
-        resBox.textContent = 'Поиск...';
+        resBox.innerHTML = '<span style="color: var(--text-muted); font-size: 13px;">Поиск...</span>';
         try {
             const response = await fetch(`${API_URL}/${id}`);
             const data = await response.json();
 
             if (response.ok) {
                 resBox.innerHTML = `
-          <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-top: 8px;">
+          <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 13px;">
             <strong>Найден заказ #${data.id}:</strong> ${escapeHtml(data.dishName)} за <strong>${data.price} ₽</strong>
             (${data.paid ? 'Оплачен' : 'Не оплачен'}).
           </div>
         `;
             } else {
-                // Ответ от нашего @RestControllerAdvice!
-                resBox.innerHTML = `<span style="color: var(--danger);">${data.error || 'Заказ не найден'}</span>`;
+                // Перехват исключения от @RestControllerAdvice!
+                resBox.innerHTML = `<div style="color: var(--danger); font-size: 13px; margin-top: 8px;">${data.error || 'Заказ не найден'}</div>`;
             }
         } catch (err) {
-            resBox.innerHTML = `<span style="color: var(--danger);">Ошибка соединения с сервером</span>`;
+            resBox.innerHTML = `<div style="color: var(--danger); font-size: 13px; margin-top: 8px;">Ошибка сети</div>`;
         }
     });
 
@@ -466,7 +361,6 @@
         return div.innerHTML;
     }
 
-    // Загружаем заказы сразу при открытии страницы
     loadOrders();
 </script>
 
