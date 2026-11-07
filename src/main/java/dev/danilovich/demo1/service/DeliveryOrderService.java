@@ -38,6 +38,14 @@ public class DeliveryOrderService {
                 .orElseThrow(() -> new OrderNotFoundException(id));
     }
 
+    public void deleteOrderById(Long id) {
+        orderRepository.deleteById(id);
+    }
+
+    public List<Order> getOrderByDishName(String dishName) {
+        return orderRepository.findByDishNameContainingIgnoreCase(dishName);
+    }
+
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }

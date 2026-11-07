@@ -34,6 +34,12 @@ public class OrderController {
         return ResponseEntity.ok().body(deliveryOrderService.getOrderById(id));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
+        deliveryOrderService.deleteOrderById(id);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping
     public ResponseEntity<Order> createOrder(@Valid @RequestBody OrderRequest orderRequest) {
         Order order = deliveryOrderService.createOrder(orderRequest.dishName(), orderRequest.price());
