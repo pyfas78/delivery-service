@@ -105,3 +105,4 @@ spring.datasource.password=твой_пароль
 
 ## 👨‍💻 Автор
 * **GitHub:** [@pyfas78](https://github.com/pyfas78)
+* **LinkedIn:** [Oleg Danilovich](https://www.linkedin.com/in/oleg-danilovich-java/)
