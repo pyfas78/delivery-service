@@ -15,7 +15,7 @@ public class Order {
     @Column(name = "price", nullable = false)
     private double price;
 
-    @Column(name = "paid?", nullable = false)
+    @Column(name = "paid", nullable = false)
     private boolean paid;
 
     public Order(String dishName, double price, boolean paid) {
