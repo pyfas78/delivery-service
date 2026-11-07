@@ -27,6 +27,12 @@ public class DeliveryOrderService {
         return paid;
     }
 
+    public Order createOrder(String dishName, double price) {
+        boolean isPaid = paymentProcessor.processPayment(price);
+        Order order = new Order(dishName, price, isPaid);
+        return orderRepository.save(order);
+    }
+
     public Order getOrderById(Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));

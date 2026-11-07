@@ -18,8 +18,7 @@ public class Order {
     @Column(name = "paid?", nullable = false)
     private boolean paid;
 
-    public Order(Long id, String dishName, double price, boolean paid) {
-        this.id = id;
+    public Order(String dishName, double price, boolean paid) {
         this.dishName = dishName;
         this.price = price;
         this.paid = paid;
