@@ -40,6 +40,11 @@ public class OrderController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/{dishName}")
+    public List<Order> getOrdersByDishName(@PathVariable String dishName) {
+        return deliveryOrderService.getOrderByDishName(dishName);
+    }
+
     @PostMapping
     public ResponseEntity<Order> createOrder(@Valid @RequestBody OrderRequest orderRequest) {
         Order order = deliveryOrderService.createOrder(orderRequest.dishName(), orderRequest.price());
