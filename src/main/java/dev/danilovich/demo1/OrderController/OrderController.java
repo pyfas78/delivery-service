@@ -21,8 +21,8 @@ public class OrderController {
 
     @PostMapping
     public OrderResponse createOrder(@RequestBody OrderRequest orderRequest) {
-        deliveryOrderService.checkOut(orderRequest.dishName(), orderRequest.price());
-        if (true) {
+        boolean isPaid = deliveryOrderService.checkOut(orderRequest.dishName(), orderRequest.price());
+        if (isPaid) {
             return new OrderResponse(true, "Order Created Successfully: " + orderRequest.dishName());
         } else {
             return new OrderResponse(false, "Order Not Created Successfully");
