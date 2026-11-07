@@ -1,0 +1,25 @@
+services:
+  postgres-db:
+    image: postgres:16-alpine
+    container_name: delivery-postgres
+    environment:
+      POSTGRES_DB: Orders_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password123
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  delivery-app:
+    build: .
+    container_name: delivery-service-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/Orders_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password123
+    depends_on:
+      - postgres-db
+volumes:
+  pgdata:
