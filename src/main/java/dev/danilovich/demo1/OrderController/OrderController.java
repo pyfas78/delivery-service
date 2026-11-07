@@ -40,7 +40,7 @@ public class OrderController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{dishName}")
+    @GetMapping("/search/{dishName}")
     public List<Order> getOrdersByDishName(@PathVariable String dishName) {
         return deliveryOrderService.getOrderByDishName(dishName);
     }
