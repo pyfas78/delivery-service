@@ -25,27 +25,23 @@ public class OrderController {
         return "Delivery Service v1.0";
     }
 
-    @GetMapping("/api/orders")
+    @GetMapping
     public List<Model> getOrders() {
         return deliveryOrderService.getAllOrders();
     }
 
-    @GetMapping("api/orders/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Model> getOrder(@PathVariable Long id) {
         return ResponseEntity.ok().body(deliveryOrderService.getOrderById(id));
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody OrderRequest orderRequest) {
-        boolean isPaid = deliveryOrderService.checkOut(orderRequest.dishName(), orderRequest.price());
-        if(isPaid) {
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(new OrderResponse(true, "Order has been created: " + orderRequest.dishName()));
+    public ResponseEntity<Model> createOrder(@Valid @RequestBody OrderRequest orderRequest) {
+        Model order = deliveryOrderService.createOrder(orderRequest.dishName(), orderRequest.price());
+        if(order.paid()) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(order);
         } else {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new OrderResponse(false, "Order hasn't been created - payment failed"));
+            return ResponseEntity.badRequest().body(order);
         }
     }
 }

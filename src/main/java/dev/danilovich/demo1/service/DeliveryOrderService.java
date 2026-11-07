@@ -14,7 +14,7 @@ public class DeliveryOrderService {
 
     public DeliveryOrderService(PaymentProcessor paymentProcessor, OrderRepository orderRepository) {
         this.paymentProcessor = paymentProcessor;
-        this.orderRepository = new OrderRepository();
+        this.orderRepository = orderRepository;
     }
 
     public boolean checkOut(String dishName, double price) {
